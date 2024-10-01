@@ -1,0 +1,24 @@
+{   
+    "name": "John",
+    "username": "jonisking",
+    "my_likes": [
+        {
+            "item_id": 2,
+            "user_id": 1
+        }
+    ],
+    "items": [
+        {
+            "item_name": "chair",
+            "description": "To sit on",
+            "img_string": "img_string_here",
+            "likes": ["userid", "userid"]
+        }
+    ],
+    "address": {
+        "street": "10 Downing Street",
+        "city": "Liverpool",
+        "post_code": "SW1A 2AA"
+    }
+
+}

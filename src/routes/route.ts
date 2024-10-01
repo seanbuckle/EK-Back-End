@@ -1,10 +1,10 @@
 import express from 'express'
 import model from '../models/model'
-import { Types } from 'mongoose'
+import { ObjectId } from 'mongoose'
 const router = express.Router()
 
 
-router.get('/getAll', async (req, res) => {
+router.get('/users', async (req, res) => {
     try{
         const data = await model.find();
         res.json(data)
@@ -17,7 +17,9 @@ router.get('/getAll', async (req, res) => {
 router.post('/post', (req, res) => {
     const data = new model({
         name: req.body.name,
-        age: req.body.age
+        username: req.body.username,
+        items: req.body.items,
+        address: req.body.address
     })
     try {
         const dataToSave = data.save();
@@ -30,9 +32,29 @@ router.post('/post', (req, res) => {
 
 
 //Get by ID Method
-router.get('/getOne/:id', async(req, res) => {
+router.get('/users/:id', async(req, res) => {
     try{
         const data = await model.findById(req.params.id);
+        res.json(data)
+    }
+    catch(error){
+        res.status(500).json({message: (error as Error).message})
+    }
+})
+
+router.get('/items/:id', async(req, res) => {
+    try{
+        const data = await model.findOne( { "items._id": `${req.params.id}` }, { "items.$": 1 } );
+        res.json(data)
+    }
+    catch(error){
+        res.status(500).json({message: (error as Error).message})
+    }
+})
+
+router.get('/items', async(req, res) => {
+    try{
+        const data = await model.aggregate([ { $unwind: "$items" }, { $replaceRoot: { newRoot: "$items" } }])
         res.json(data)
     }
     catch(error){

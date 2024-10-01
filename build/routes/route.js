@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const model_1 = __importDefault(require("../models/model"));
 const router = express_1.default.Router();
-router.get('/getAll', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.find();
         res.json(data);
@@ -27,7 +27,9 @@ router.get('/getAll', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 router.post('/post', (req, res) => {
     const data = new model_1.default({
         name: req.body.name,
-        age: req.body.age
+        username: req.body.username,
+        items: req.body.items,
+        address: req.body.address
     });
     try {
         const dataToSave = data.save();
@@ -38,9 +40,27 @@ router.post('/post', (req, res) => {
     }
 });
 //Get by ID Method
-router.get('/getOne/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.findById(req.params.id);
+        res.json(data);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+router.get('/items/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield model_1.default.findOne({ "items._id": `${req.params.id}` }, { "items.$": 1 });
+        res.json(data);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+router.get('/items', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield model_1.default.aggregate([{ $unwind: "$items" }, { $replaceRoot: { newRoot: "$items" } }]);
         res.json(data);
     }
     catch (error) {
