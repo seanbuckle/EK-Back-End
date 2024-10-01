@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const model_1 = __importDefault(require("../models/model"));
 const router = express_1.default.Router();
+// GET all users
 router.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.find();
@@ -24,7 +25,8 @@ router.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: error.message });
     }
 }));
-router.post('/post', (req, res) => {
+// POST new user
+router.post('/new-user', (req, res) => {
     const data = new model_1.default({
         name: req.body.name,
         username: req.body.username,
@@ -39,7 +41,7 @@ router.post('/post', (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
-//Get by ID Method
+//GET by user by ID 
 router.get('/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.findById(req.params.id);
@@ -49,6 +51,7 @@ router.get('/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ message: error.message });
     }
 }));
+//GET items by ID
 router.get('/items/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.findOne({ "items._id": `${req.params.id}` }, { "items.$": 1 });
@@ -58,6 +61,7 @@ router.get('/items/:id', (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ message: error.message });
     }
 }));
+//GET all items
 router.get('/items', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.aggregate([{ $unwind: "$items" }, { $replaceRoot: { newRoot: "$items" } }]);
@@ -67,7 +71,7 @@ router.get('/items', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: error.message });
     }
 }));
-//Update by ID Method
+//PATCH user
 router.patch('/update/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
@@ -80,7 +84,7 @@ router.patch('/update/:id', (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(400).json({ message: error.message });
     }
 }));
-//Delete by ID Method
+//DELETE user by ID
 router.delete('/delete/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;

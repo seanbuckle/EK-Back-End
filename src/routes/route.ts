@@ -3,7 +3,7 @@ import model from '../models/model'
 import { ObjectId } from 'mongoose'
 const router = express.Router()
 
-
+// GET all users
 router.get('/users', async (req, res) => {
     try{
         const data = await model.find();
@@ -13,8 +13,8 @@ router.get('/users', async (req, res) => {
         res.status(500).json({message: (error as Error).message})
     }
 })
-
-router.post('/post', (req, res) => {
+// POST new user
+router.post('/new-user', (req, res) => {
     const data = new model({
         name: req.body.name,
         username: req.body.username,
@@ -31,7 +31,7 @@ router.post('/post', (req, res) => {
 })
 
 
-//Get by ID Method
+//GET by user by ID 
 router.get('/users/:id', async(req, res) => {
     try{
         const data = await model.findById(req.params.id);
@@ -41,7 +41,7 @@ router.get('/users/:id', async(req, res) => {
         res.status(500).json({message: (error as Error).message})
     }
 })
-
+//GET items by ID
 router.get('/items/:id', async(req, res) => {
     try{
         const data = await model.findOne( { "items._id": `${req.params.id}` }, { "items.$": 1 } );
@@ -51,7 +51,7 @@ router.get('/items/:id', async(req, res) => {
         res.status(500).json({message: (error as Error).message})
     }
 })
-
+//GET all items
 router.get('/items', async(req, res) => {
     try{
         const data = await model.aggregate([ { $unwind: "$items" }, { $replaceRoot: { newRoot: "$items" } }])
@@ -62,7 +62,7 @@ router.get('/items', async(req, res) => {
     }
 })
 
-//Update by ID Method
+//PATCH user
 router.patch('/update/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -80,7 +80,7 @@ router.patch('/update/:id', async (req, res) => {
     }
 })
 
-//Delete by ID Method
+//DELETE user by ID
 router.delete('/delete/:id', async (req, res) => {
     try {
         const id = req.params.id;

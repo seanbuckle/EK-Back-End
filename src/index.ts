@@ -2,8 +2,11 @@ import express from 'express'
 import mongoose from 'mongoose'
 import 'dotenv/config'
 import routes from './routes/route'
+import cors from 'cors'
+
 
 const app = express();
+app.use(cors());
 
 const mongoString: string = process.env.DATABASE_URL!
 mongoose.connect(mongoString)
