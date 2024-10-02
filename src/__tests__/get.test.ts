@@ -25,7 +25,18 @@ describe("GET: Test GET endpoint", () => {
   });
   it("should return an individual user by ID", async () => {
     await request(app)
-      .get(`/api/users/66fbc2e6d21d87957aa7876c`)
+      .get(`/api/users/66fd22b19b790ad6086965fc`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toHaveProperty("name");
+        expect(body).toHaveProperty("username");
+        expect(body).toHaveProperty("items");
+        expect(body).toHaveProperty("address");
+      });
+  });
+  it("should return an individual user by username", async () => {
+    await request(app)
+      .get(`/api/user/peteisking`)
       .expect(200)
       .then(({ body }) => {
         expect(body).toHaveProperty("name");
@@ -36,10 +47,10 @@ describe("GET: Test GET endpoint", () => {
   });
   it("should return an individual item by ID", async () => {
     await request(app)
-      .get(`/api/items/66fbc2e6d21d87957aa7876e`)
+      .get(`/api/items/66fd22ec9b790ad608696602`)
       .expect(200)
       .then(({ body }) => {
-        expect(body).toHaveProperty("like");
+        expect(body).toHaveProperty("likes");
         expect(body).toHaveProperty("description");
         expect(body).toHaveProperty("img_string");
       });

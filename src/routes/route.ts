@@ -37,6 +37,14 @@ router.get("/users/:id", async (req, res) => {
     res.status(500).json({ message: (error as Error).message });
   }
 });
+router.get("/user/:username", async (req, res) => {
+  try {
+    const data = await model.findOne({ username: req.params.username });
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message });
+  }
+});
 //GET items by ID
 router.get("/items/:id", async (req, res) => {
   const id = new mongoose.Types.ObjectId(req.params.id);
@@ -65,13 +73,19 @@ router.get("/items", async (req, res) => {
 });
 
 //PATCH user
-router.patch("/update/:id", async (req, res) => {
+router.patch("/items/:id", async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = new mongoose.Types.ObjectId(req.params.id);
+
     const updatedData = req.body;
+    const data = updatedData.likes;
     const options = { new: true };
 
-    const result = await model.findByIdAndUpdate(id, updatedData, options);
+    const result = await model.findOneAndUpdate(
+      { "items._id": id },
+      { $addToSet: { "items.$.likes": data } },
+      options
+    );
 
     res.send(result);
   } catch (error) {

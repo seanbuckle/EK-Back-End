@@ -52,6 +52,15 @@ router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ message: error.message });
     }
 }));
+router.get("/user/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = yield model_1.default.findOne({ username: req.params.username });
+        res.json(data);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
 //GET items by ID
 router.get("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = new mongoose_1.default.Types.ObjectId(req.params.id);
@@ -81,12 +90,13 @@ router.get("/items", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 //PATCH user
-router.patch("/update/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params.id;
+        const id = new mongoose_1.default.Types.ObjectId(req.params.id);
         const updatedData = req.body;
+        const data = updatedData.likes;
         const options = { new: true };
-        const result = yield model_1.default.findByIdAndUpdate(id, updatedData, options);
+        const result = yield model_1.default.findOneAndUpdate({ "items._id": id }, { $addToSet: { "items.$.likes": data } }, options);
         res.send(result);
     }
     catch (error) {
