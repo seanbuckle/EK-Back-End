@@ -39,10 +39,9 @@ describe("GET: Test GET endpoint", () => {
       .get(`/api/items/66fbc2e6d21d87957aa7876e`)
       .expect(200)
       .then(({ body }) => {
-        expect(body).toHaveProperty("items");
-        expect(body.items[0]).toHaveProperty("like");
-        expect(body.items[0]).toHaveProperty("description");
-        expect(body.items[0]).toHaveProperty("img_string");
+        expect(body).toHaveProperty("like");
+        expect(body).toHaveProperty("description");
+        expect(body).toHaveProperty("img_string");
       });
   });
 });

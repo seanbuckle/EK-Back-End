@@ -25,8 +25,7 @@
     "@types/supertest": "^6.0.2",
     "jest": "^29.7.0",
     "supertest": "^7.0.0",
-    "ts-jest": "^29.2.5",
-    "types": "file:../../../../supertest"
+    "ts-jest": "^29.2.5"
   },
   "jest": {
     "preset": "ts-jest",
