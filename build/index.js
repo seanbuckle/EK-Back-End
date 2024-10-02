@@ -13,14 +13,15 @@ app.use((0, cors_1.default)());
 const mongoString = process.env.DATABASE_URL;
 mongoose_1.default.connect(mongoString);
 const database = mongoose_1.default.connection;
-database.on('error', (error) => {
+database.on("error", (error) => {
     console.log(error);
 });
-database.once('connected', () => {
-    console.log('Database Connected');
+database.once("connected", () => {
+    console.log("Database Connected");
 });
 app.use(express_1.default.json());
 app.use(`/api`, route_1.default);
 app.listen(3000, () => {
     console.log(`server started app on 3000`);
 });
+exports.default = app;

@@ -14,9 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const model_1 = __importDefault(require("../models/model"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const router = express_1.default.Router();
 // GET all users
-router.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.find();
         res.json(data);
@@ -26,12 +27,12 @@ router.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 // POST new user
-router.post('/new-user', (req, res) => {
+router.post("/new-user", (req, res) => {
     const data = new model_1.default({
         name: req.body.name,
         username: req.body.username,
         items: req.body.items,
-        address: req.body.address
+        address: req.body.address,
     });
     try {
         const dataToSave = data.save();
@@ -41,8 +42,8 @@ router.post('/new-user', (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
-//GET by user by ID 
-router.get('/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//GET by user by ID
+router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.findById(req.params.id);
         res.json(data);
@@ -52,19 +53,27 @@ router.get('/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 }));
 //GET items by ID
-router.get('/items/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = new mongoose_1.default.Types.ObjectId(req.params.id);
     try {
-        const data = yield model_1.default.findOne({ "items._id": `${req.params.id}` }, { "items.$": 1 });
-        res.json(data);
+        const data = yield model_1.default.aggregate([
+            { $unwind: "$items" },
+            { $replaceRoot: { newRoot: "$items" } },
+            { $match: { _id: id } },
+        ]);
+        res.json(data[0]);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 }));
 //GET all items
-router.get('/items', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/items", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield model_1.default.aggregate([{ $unwind: "$items" }, { $replaceRoot: { newRoot: "$items" } }]);
+        const data = yield model_1.default.aggregate([
+            { $unwind: "$items" },
+            { $replaceRoot: { newRoot: "$items" } },
+        ]);
         res.json(data);
     }
     catch (error) {
@@ -72,7 +81,7 @@ router.get('/items', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 //PATCH user
-router.patch('/update/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/update/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         const updatedData = req.body;
@@ -85,7 +94,7 @@ router.patch('/update/:id', (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 }));
 //DELETE user by ID
-router.delete('/delete/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         const data = yield model_1.default.findByIdAndDelete(id);
