@@ -15,8 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const model_1 = __importDefault(require("../models/model"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const api_json_1 = __importDefault(require("../../api.json"));
 const router = express_1.default.Router();
 // GET all users
+router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.send(api_json_1.default);
+}));
 router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.find();
@@ -26,7 +30,7 @@ router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: error.message });
     }
 }));
-// POST new user
+// POST many new users at once
 router.post("/manyusers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const insert = yield model_1.default.insertMany(req.body);
@@ -36,6 +40,7 @@ router.post("/manyusers", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(400).json({ message: error.message });
     }
 }));
+//post a new user
 router.post("/new-user", (req, res) => {
     const data = new model_1.default({
         name: req.body.name,
@@ -62,6 +67,7 @@ router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json({ message: error.message });
     }
 }));
+//get user by username
 router.get("/user/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.findOne({ username: req.params.username });
@@ -99,7 +105,7 @@ router.get("/items", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: error.message });
     }
 }));
-//PATCH user
+//PATCH user items by adding a like
 router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = new mongoose_1.default.Types.ObjectId(req.params.id);
@@ -113,6 +119,7 @@ router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(400).json({ message: error.message });
     }
 }));
+//gets available trades
 router.get("/trades", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user_id = req.body.user_id;
     const their_id = req.body.their_user_id;
@@ -141,6 +148,7 @@ router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(400).json({ message: error.message });
     }
 }));
+//gets an array of user matches
 router.get("/matches", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
     try {
@@ -151,6 +159,7 @@ router.get("/matches", (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(500).json({ message: error.message });
     }
 }));
+//checks whether a match has occured
 router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
     const user_id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
@@ -177,8 +186,6 @@ router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, funct
         const their_id_check = yield model_1.default.findOne({
             "matches.match_item_id": item_id,
         });
-        console.log(user_match_check);
-        console.log(their_id_check);
         if (user_match_check !== null && their_id_check === null) {
             const updateMatches = yield model_1.default.findOneAndUpdate({ _id: user_id }, { $addToSet: { matches: theirObj } }, options);
             const userItem = user_match_check.items.map((item) => {
