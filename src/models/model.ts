@@ -39,6 +39,9 @@ const matchSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  settrade: {
+    type: Boolean,
+  },
 });
 
 const addressSchema = new mongoose.Schema({

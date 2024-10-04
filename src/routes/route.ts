@@ -89,6 +89,18 @@ router.get("/items", async (req, res) => {
     res.status(500).json({ message: (error as Error).message });
   }
 });
+router.get("/tradesuccess/", async (req, res) => {});
+
+router.post("/settrade", async (req, res) => {
+  const match_id = new mongoose.Types.ObjectId(`${req.body.match_id}`);
+  const val = req.body.bool;
+  console.log(match_id);
+  const changeBool = await model.findOneAndUpdate(
+    { "matches._id": match_id },
+    { $set: { settrade: false } }
+  );
+  res.send(changeBool);
+});
 
 //PATCH user items by adding a like
 router.patch("/items/:id", async (req, res) => {
@@ -111,9 +123,9 @@ router.patch("/items/:id", async (req, res) => {
   }
 });
 //gets available trades
-router.get("/trades", async (req, res) => {
-  const user_id = req.body.user_id;
-  const their_id = req.body.their_user_id;
+router.get("/trades/:user_id/:their_user_id", async (req, res) => {
+  const user_id = req.params.user_id;
+  const their_id = req.params.their_user_id;
   const getTheirItem = await model.findOne(
     {
       "matches.match_user_id": user_id,
