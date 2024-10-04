@@ -137,10 +137,12 @@ router.get("/trades/:user_id/:their_user_id", async (req, res) => {
     { matches: 1, username: 1 }
   );
 
-  res.send({
-    user_matches: getOurItem!.matches,
-    their_matches: getTheirItem!.matches,
-  });
+  if (getOurItem && getTheirItem) {
+    res.send({
+      user_matches: getOurItem!.matches,
+      their_matches: getTheirItem!.matches,
+    });
+  }
 });
 
 //DELETE user by ID
