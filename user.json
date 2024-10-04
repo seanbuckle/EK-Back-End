@@ -1,24 +1,132 @@
-{   
-    "name": "John",
-    "username": "jonisking",
-    "my_likes": [
-        {
-            "item_id": 2,
-            "user_id": 1
-        }
-    ],
+[
+  {
+    "name": "Peety",
+    "username": "peteisking",
     "items": [
-        {
-            "item_name": "chair",
-            "description": "To sit on",
-            "img_string": "img_string_here",
-            "likes": ["userid", "userid"]
-        }
+      {
+        "item_name": "chair",
+        "description": "To sit on",
+        "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+        "likes": []
+      },
+      {
+        "item_name": "sofa",
+        "description": "Another thing to sit on",
+        "img_string": "https://www.chesterfieldsofas.co.uk/media/magearray/news/image/cache/900/SOFA_MANCHESTER.jpg",
+        "likes": []
+      }
     ],
-    "address": {
-        "street": "10 Downing Street",
+    "address": [
+      {
+        "street": "15 Downing Street",
         "city": "Liverpool",
         "post_code": "SW1A 2AA"
-    }
-
-}
+      }
+    ],
+    "matches": []
+  },
+  {
+    "name": "Alice",
+    "username": "alice_wonder",
+    "items": [
+      {
+        "item_name": "table",
+        "description": "For dining or working",
+        "img_string": "https://example.com/table.jpg",
+        "likes": []
+      },
+      {
+        "item_name": "lamp",
+        "description": "To light up the room",
+        "img_string": "https://example.com/lamp.jpg",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "10 Maple Avenue",
+        "city": "London",
+        "post_code": "EC1A 1AA"
+      }
+    ],
+    "matches": []
+  },
+  {
+    "name": "Bob",
+    "username": "bobby_bear",
+    "items": [
+      {
+        "item_name": "bookshelf",
+        "description": "To store your books",
+        "img_string": "https://example.com/bookshelf.jpg",
+        "likes": []
+      },
+      {
+        "item_name": "desk",
+        "description": "For your work needs",
+        "img_string": "https://example.com/desk.jpg",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "20 Oak Street",
+        "city": "Manchester",
+        "post_code": "M1 1AA"
+      }
+    ],
+    "matches": []
+  },
+  {
+    "name": "Charlie",
+    "username": "charlie_the_cat",
+    "items": [
+      {
+        "item_name": "bed",
+        "description": "Where you sleep",
+        "img_string": "https://example.com/bed.jpg",
+        "likes": []
+      },
+      {
+        "item_name": "rug",
+        "description": "To add warmth to the floor",
+        "img_string": "https://example.com/rug.jpg",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "30 Pine Lane",
+        "city": "Birmingham",
+        "post_code": "B1 1AA"
+      }
+    ],
+    "matches": []
+  },
+  {
+    "name": "Daisy",
+    "username": "daisy_flower",
+    "items": [
+      {
+        "item_name": "plant",
+        "description": "To brighten up your space",
+        "img_string": "https://example.com/plant.jpg",
+        "likes": []
+      },
+      {
+        "item_name": "mirror",
+        "description": "To check your appearance",
+        "img_string": "https://example.com/mirror.jpg",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "25 Cherry Boulevard",
+        "city": "Glasgow",
+        "post_code": "G1 1AA"
+      }
+    ],
+    "matches": []
+  }
+]

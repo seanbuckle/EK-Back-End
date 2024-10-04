@@ -22,23 +22,23 @@ const itemSchema = new mongoose_1.default.Schema({
     },
 });
 const matchSchema = new mongoose_1.default.Schema({
-    their_item_name: {
+    match_item_name: {
         type: String,
         required: true,
     },
-    their_user_name: {
+    match_user_name: {
         type: String,
         required: true,
     },
-    their_img_string: {
+    match_img_string: {
         type: String,
         required: true,
     },
-    their_user_id: {
+    match_user_id: {
         type: String,
         required: true,
     },
-    their_item_id: {
+    match_item_id: {
         type: String,
         required: true,
     },

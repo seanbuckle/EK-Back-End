@@ -104,6 +104,18 @@ router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(400).json({ message: error.message });
     }
 }));
+router.get("/trades", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user_id = req.body.user_id;
+    const their_id = req.body.their_user_id;
+    const getTheirItem = yield model_1.default.findOne({
+        "matches.match_user_id": user_id,
+    }, { matches: 1, username: 1 });
+    const getOurItem = yield model_1.default.findOne({ "matches.match_user_id": their_id }, { matches: 1, username: 1 });
+    res.send({
+        user_matches: getOurItem.matches,
+        their_matches: getTheirItem.matches,
+    });
+}));
 //DELETE user by ID
 router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -132,7 +144,7 @@ router.get("/matches", (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
-    const user_id = req.body.user_id;
+    const user_id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
     const item_id = new mongoose_1.default.Types.ObjectId(`${req.body.item_id}`);
     try {
         const getTheirId = yield model_1.default.findOne({ "items._id": item_id }, { _id: 1, username: 1 });
@@ -143,19 +155,21 @@ router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, funct
         ]);
         const their_id = getTheirId._id.toString();
         const theirObj = {
-            their_user_id: their_id,
-            their_user_name: getTheirId === null || getTheirId === void 0 ? void 0 : getTheirId.username,
-            their_item_name: getTheirItem[0].item_name,
-            their_img_string: getTheirItem[0].img_string,
-            their_item_id: item_id,
+            match_user_id: their_id,
+            match_user_name: getTheirId === null || getTheirId === void 0 ? void 0 : getTheirId.username,
+            match_item_name: getTheirItem[0].item_name,
+            match_img_string: getTheirItem[0].img_string,
+            match_item_id: item_id,
         };
         const user_match_check = yield model_1.default.findOne({
             $and: [{ _id: user_id }, { "items.likes": their_id }],
         });
         const options = { new: true, upsert: true };
         const their_id_check = yield model_1.default.findOne({
-            "matches.their_item_id": item_id,
+            "matches.match_item_id": item_id,
         });
+        console.log(user_match_check);
+        console.log(their_id_check);
         if (user_match_check !== null && their_id_check === null) {
             const updateMatches = yield model_1.default.findOneAndUpdate({ _id: user_id }, { $addToSet: { matches: theirObj } }, options);
             const userItem = user_match_check.items.map((item) => {
@@ -165,11 +179,11 @@ router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, funct
             });
             const userItemId = (_a = userItem[0]) === null || _a === void 0 ? void 0 : _a._id.toString();
             const ourObj = {
-                their_user_id: user_id,
-                their_user_name: user_match_check.username,
-                their_item_name: (_b = userItem[0]) === null || _b === void 0 ? void 0 : _b.item_name,
-                their_img_string: (_c = userItem[0]) === null || _c === void 0 ? void 0 : _c.img_string,
-                their_item_id: userItemId,
+                match_user_id: user_id,
+                match_user_name: user_match_check.username,
+                match_item_name: (_b = userItem[0]) === null || _b === void 0 ? void 0 : _b.item_name,
+                match_img_string: (_c = userItem[0]) === null || _c === void 0 ? void 0 : _c.img_string,
+                match_item_id: userItemId,
             };
             const updateTheirMatches = yield model_1.default.findOneAndUpdate({ _id: their_id }, { $addToSet: { matches: ourObj } }, options);
             res.send([updateMatches, updateTheirMatches]);
