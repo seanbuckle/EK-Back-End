@@ -38,6 +38,10 @@ const matchSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
+    their_item_id: {
+        type: String,
+        required: true,
+    },
 });
 const addressSchema = new mongoose_1.default.Schema({
     street: {

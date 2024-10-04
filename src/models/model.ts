@@ -35,6 +35,10 @@ const matchSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  their_item_id: {
+    type: String,
+    required: true,
+  },
 });
 
 const addressSchema = new mongoose.Schema({

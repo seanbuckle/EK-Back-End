@@ -1,6 +1,7 @@
 import express from "express";
 import model from "../models/model";
 import mongoose, { ObjectId } from "mongoose";
+import { match } from "assert";
 const router = express.Router();
 
 // GET all users
@@ -108,7 +109,18 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(400).json({ message: (error as Error).message });
   }
 });
-router.get("/matchcheck", async (req, res) => {
+
+router.get("/matches", async (req, res) => {
+  const id = new mongoose.Types.ObjectId(`${req.body.user_id}`);
+  try {
+    const data = await model.find({ _id: id }, { matches: 1 });
+    res.json(data[0].matches);
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message });
+  }
+});
+
+router.post("/matchcheck", async (req, res) => {
   const user_id = req.body.user_id;
   const item_id = new mongoose.Types.ObjectId(`${req.body.item_id}`);
   try {
@@ -133,22 +145,36 @@ router.get("/matchcheck", async (req, res) => {
     const user_match_check = await model.findOne({
       $and: [{ _id: user_id }, { "items.likes": their_id }],
     });
-    // const ourObj = {
-    //     their_user_id: user_id,
-    //   their_user_name: user_match_check.username,
-    //   their_item_name: getTheirItem[0].item_name,
-    //   their_img_string: getTheirItem[0].img_string,
-    //   their_item_id: item_id,
-    // }
     const options = { new: true, upsert: true };
-    if (user_match_check !== null) {
+    const their_id_check = await model.findOne({
+      "matches.their_item_id": item_id,
+    });
+
+    if (user_match_check !== null && their_id_check === null) {
       const updateMatches = await model.findOneAndUpdate(
         { _id: user_id },
         { $addToSet: { matches: theirObj } },
         options
       );
-      //   const updateTheirMatches = await model.findOneAndUpdate({_id: their_id}, {$addToSet: {matches: matches: }})
-      res.send(updateMatches);
+      const userItem = user_match_check.items.map((item) => {
+        if (item.likes.includes(their_id)) {
+          return item;
+        }
+      });
+      const userItemId = userItem[0]?._id.toString();
+      const ourObj = {
+        their_user_id: user_id,
+        their_user_name: user_match_check.username,
+        their_item_name: userItem[0]?.item_name,
+        their_img_string: userItem[0]?.img_string,
+        their_item_id: userItemId,
+      };
+      const updateTheirMatches = await model.findOneAndUpdate(
+        { _id: their_id },
+        { $addToSet: { matches: ourObj } },
+        options
+      );
+      res.send([updateMatches, updateTheirMatches]);
     } else {
       res.send({ msg: "failure" });
     }
