@@ -2,9 +2,14 @@ import express from "express";
 import model from "../models/model";
 import mongoose, { ObjectId } from "mongoose";
 import { match } from "assert";
+import api from "../../api.json";
 const router = express.Router();
 
 // GET all users
+
+router.get("/", async (req, res) => {
+  res.send(api);
+});
 
 router.get("/users", async (req, res) => {
   try {
@@ -14,7 +19,7 @@ router.get("/users", async (req, res) => {
     res.status(500).json({ message: (error as Error).message });
   }
 });
-// POST new user
+// POST many new users at once
 router.post("/manyusers", async (req, res) => {
   try {
     const insert = await model.insertMany(req.body);
@@ -23,7 +28,7 @@ router.post("/manyusers", async (req, res) => {
     res.status(400).json({ message: (error as Error).message });
   }
 });
-
+//post a new user
 router.post("/new-user", (req, res) => {
   const data = new model({
     name: req.body.name,
@@ -49,6 +54,7 @@ router.get("/users/:id", async (req, res) => {
     res.status(500).json({ message: (error as Error).message });
   }
 });
+//get user by username
 router.get("/user/:username", async (req, res) => {
   try {
     const data = await model.findOne({ username: req.params.username });
@@ -84,7 +90,7 @@ router.get("/items", async (req, res) => {
   }
 });
 
-//PATCH user
+//PATCH user items by adding a like
 router.patch("/items/:id", async (req, res) => {
   try {
     const id = new mongoose.Types.ObjectId(req.params.id);
@@ -104,7 +110,7 @@ router.patch("/items/:id", async (req, res) => {
     res.status(400).json({ message: (error as Error).message });
   }
 });
-
+//gets available trades
 router.get("/trades", async (req, res) => {
   const user_id = req.body.user_id;
   const their_id = req.body.their_user_id;
@@ -139,7 +145,7 @@ router.delete("/delete/:id", async (req, res) => {
     res.status(400).json({ message: (error as Error).message });
   }
 });
-
+//gets an array of user matches
 router.get("/matches", async (req, res) => {
   const id = new mongoose.Types.ObjectId(`${req.body.user_id}`);
   try {
@@ -149,7 +155,7 @@ router.get("/matches", async (req, res) => {
     res.status(500).json({ message: (error as Error).message });
   }
 });
-
+//checks whether a match has occured
 router.post("/matchcheck", async (req, res) => {
   const user_id = new mongoose.Types.ObjectId(`${req.body.user_id}`);
   const item_id = new mongoose.Types.ObjectId(`${req.body.item_id}`);
@@ -179,8 +185,6 @@ router.post("/matchcheck", async (req, res) => {
     const their_id_check = await model.findOne({
       "matches.match_item_id": item_id,
     });
-    console.log(user_match_check);
-    console.log(their_id_check);
     if (user_match_check !== null && their_id_check === null) {
       const updateMatches = await model.findOneAndUpdate(
         { _id: user_id },

@@ -1,0 +1,119 @@
+[
+  {
+    "GET /api": {
+      "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "GET /api/users": {
+      "description": "serves an array of all topics",
+      "exampleResponse": {
+        "users": {
+          "name": "Peety",
+          "username": "peteisking",
+          "items": {
+            "item_name": "chair",
+            "description": "To sit on",
+            "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+            "likes": [],
+            "_id": "66ffc4806fb6d65dd74fb566"
+          }
+        }
+      }
+    },
+    "GET /api/user/:id": {
+      "description": "brings back specific user",
+      "exampleResponse": {
+        "user": {
+          "name": "Peety",
+          "username": "peteisking",
+          "items": {
+            "item_name": "chair",
+            "description": "To sit on",
+            "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+            "likes": [],
+            "_id": "66ffc4806fb6d65dd74fb566"
+          }
+        }
+      }
+    },
+    "GET /api/user/:username": {
+      "description": "brings back specific user",
+      "exampleResponse": {
+        "user": {
+          "name": "Peety",
+          "username": "peteisking",
+          "items": {
+            "item_name": "chair",
+            "description": "To sit on",
+            "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+            "likes": [],
+            "_id": "66ffc4806fb6d65dd74fb566"
+          }
+        }
+      }
+    },
+    "GET /api/items": {
+      "description": "brings back items",
+      "exampleResponse": {
+        "items": {
+          "item_name": "chair",
+          "description": "To sit on",
+          "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+          "likes": [],
+          "_id": "66ffc4806fb6d65dd74fb566"
+        }
+      }
+    },
+    "GET /api/items/:id": {
+      "description": "brings back specific item",
+      "exampleResponse": {
+        "items": {
+          "item_name": "chair",
+          "description": "To sit on",
+          "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+          "likes": [],
+          "_id": "66ffc4806fb6d65dd74fb566"
+        }
+      }
+    },
+    "GET /api/trades": {
+      "description": "brings back matching trades",
+      "exampleBody": {
+        "user_id": "fwojiojoijosdj",
+        "their_user_id": "sdfsfsdfsfdsf"
+      },
+      "exampleResponse": {
+        "user_matches": {
+          "item_name": "chair",
+          "description": "To sit on",
+          "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+          "likes": [],
+          "_id": "66ffc4806fb6d65dd74fb566"
+        }
+      }
+    },
+    "POST /api/matchcheck": {
+      "description": "checks whether a match has occured",
+      "exampleBody": {
+        "user_id": "fwojiojoijosdj",
+        "item_id": "sdfsfsdfsfdsf"
+      }
+    },
+    "GET /api/matches": {
+      "description": "brings back an array of matches for the user",
+      "exampleBody": {
+        "user_id": "fwojiojoijosdj"
+      },
+      "exampleResponse": {
+        "matches": [
+          {
+            "item_name": "chair",
+            "description": "To sit on",
+            "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+            "likes": [],
+            "_id": "66ffc4806fb6d65dd74fb566"
+          }
+        ]
+      }
+    }
+  }
+]
