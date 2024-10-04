@@ -146,8 +146,8 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 //gets an array of user matches
-router.get("/matches", async (req, res) => {
-  const id = new mongoose.Types.ObjectId(`${req.body.user_id}`);
+router.get("/matches/:user_id", async (req, res) => {
+  const id = new mongoose.Types.ObjectId(`${req.params.user_id}`);
   try {
     const data = await model.find({ _id: id }, { matches: 1 });
     res.json(data[0].matches);

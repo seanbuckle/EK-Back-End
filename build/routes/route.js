@@ -149,8 +149,8 @@ router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }));
 //gets an array of user matches
-router.get("/matches", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
+router.get("/matches/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = new mongoose_1.default.Types.ObjectId(`${req.params.user_id}`);
     try {
         const data = yield model_1.default.find({ _id: id }, { matches: 1 });
         res.json(data[0].matches);
