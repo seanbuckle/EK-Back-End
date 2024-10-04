@@ -27,6 +27,15 @@ router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 // POST new user
+router.post("/manyusers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const insert = yield model_1.default.insertMany(req.body);
+        res.send(insert);
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}));
 router.post("/new-user", (req, res) => {
     const data = new model_1.default({
         name: req.body.name,

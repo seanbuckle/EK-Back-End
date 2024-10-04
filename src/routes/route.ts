@@ -5,6 +5,7 @@ import { match } from "assert";
 const router = express.Router();
 
 // GET all users
+
 router.get("/users", async (req, res) => {
   try {
     const data = await model.find();
@@ -14,6 +15,15 @@ router.get("/users", async (req, res) => {
   }
 });
 // POST new user
+router.post("/manyusers", async (req, res) => {
+  try {
+    const insert = await model.insertMany(req.body);
+    res.send(insert);
+  } catch (error) {
+    res.status(400).json({ message: (error as Error).message });
+  }
+});
+
 router.post("/new-user", (req, res) => {
   const data = new model({
     name: req.body.name,
