@@ -105,6 +105,14 @@ router.get("/items", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: error.message });
     }
 }));
+router.get("/tradesuccess/", (req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
+router.post("/settrade", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const match_id = new mongoose_1.default.Types.ObjectId(`${req.body.match_id}`);
+    const val = req.body.bool;
+    console.log(match_id);
+    const changeBool = yield model_1.default.findOneAndUpdate({ "matches._id": match_id }, { $set: { settrade: false } });
+    res.send(changeBool);
+}));
 //PATCH user items by adding a like
 router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -120,9 +128,9 @@ router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 }));
 //gets available trades
-router.get("/trades", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user_id = req.body.user_id;
-    const their_id = req.body.their_user_id;
+router.get("/trades/:user_id/:their_user_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user_id = req.params.user_id;
+    const their_id = req.params.their_user_id;
     const getTheirItem = yield model_1.default.findOne({
         "matches.match_user_id": user_id,
     }, { matches: 1, username: 1 });
