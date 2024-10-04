@@ -27,12 +27,22 @@ router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 // POST new user
+router.post("/manyusers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const insert = yield model_1.default.insertMany(req.body);
+        res.send(insert);
+    }
+    catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}));
 router.post("/new-user", (req, res) => {
     const data = new model_1.default({
         name: req.body.name,
         username: req.body.username,
         items: req.body.items,
         address: req.body.address,
+        matches: req.body.matches,
     });
     try {
         const dataToSave = data.save();
@@ -103,6 +113,18 @@ router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(400).json({ message: error.message });
     }
 }));
+router.get("/trades", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user_id = req.body.user_id;
+    const their_id = req.body.their_user_id;
+    const getTheirItem = yield model_1.default.findOne({
+        "matches.match_user_id": user_id,
+    }, { matches: 1, username: 1 });
+    const getOurItem = yield model_1.default.findOne({ "matches.match_user_id": their_id }, { matches: 1, username: 1 });
+    res.send({
+        user_matches: getOurItem.matches,
+        their_matches: getTheirItem.matches,
+    });
+}));
 //DELETE user by ID
 router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -117,6 +139,70 @@ router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
     catch (error) {
         res.status(400).json({ message: error.message });
+    }
+}));
+router.get("/matches", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
+    try {
+        const data = yield model_1.default.find({ _id: id }, { matches: 1 });
+        res.json(data[0].matches);
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}));
+router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c;
+    const user_id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
+    const item_id = new mongoose_1.default.Types.ObjectId(`${req.body.item_id}`);
+    try {
+        const getTheirId = yield model_1.default.findOne({ "items._id": item_id }, { _id: 1, username: 1 });
+        const getTheirItem = yield model_1.default.aggregate([
+            { $unwind: "$items" },
+            { $replaceRoot: { newRoot: "$items" } },
+            { $match: { _id: item_id } },
+        ]);
+        const their_id = getTheirId._id.toString();
+        const theirObj = {
+            match_user_id: their_id,
+            match_user_name: getTheirId === null || getTheirId === void 0 ? void 0 : getTheirId.username,
+            match_item_name: getTheirItem[0].item_name,
+            match_img_string: getTheirItem[0].img_string,
+            match_item_id: item_id,
+        };
+        const user_match_check = yield model_1.default.findOne({
+            $and: [{ _id: user_id }, { "items.likes": their_id }],
+        });
+        const options = { new: true, upsert: true };
+        const their_id_check = yield model_1.default.findOne({
+            "matches.match_item_id": item_id,
+        });
+        console.log(user_match_check);
+        console.log(their_id_check);
+        if (user_match_check !== null && their_id_check === null) {
+            const updateMatches = yield model_1.default.findOneAndUpdate({ _id: user_id }, { $addToSet: { matches: theirObj } }, options);
+            const userItem = user_match_check.items.map((item) => {
+                if (item.likes.includes(their_id)) {
+                    return item;
+                }
+            });
+            const userItemId = (_a = userItem[0]) === null || _a === void 0 ? void 0 : _a._id.toString();
+            const ourObj = {
+                match_user_id: user_id,
+                match_user_name: user_match_check.username,
+                match_item_name: (_b = userItem[0]) === null || _b === void 0 ? void 0 : _b.item_name,
+                match_img_string: (_c = userItem[0]) === null || _c === void 0 ? void 0 : _c.img_string,
+                match_item_id: userItemId,
+            };
+            const updateTheirMatches = yield model_1.default.findOneAndUpdate({ _id: their_id }, { $addToSet: { matches: ourObj } }, options);
+            res.send([updateMatches, updateTheirMatches]);
+        }
+        else {
+            res.send({ msg: "failure" });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
 }));
 exports.default = router;

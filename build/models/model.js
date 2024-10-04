@@ -7,44 +7,70 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const itemSchema = new mongoose_1.default.Schema({
     item_name: {
         type: String,
-        required: true
+        required: true,
     },
     description: {
         type: String,
-        required: true
+        required: true,
     },
     img_string: {
         type: String,
-        required: true
+        required: true,
     },
     likes: {
-        type: []
-    }
+        type: [],
+    },
+});
+const matchSchema = new mongoose_1.default.Schema({
+    match_item_name: {
+        type: String,
+        required: true,
+    },
+    match_user_name: {
+        type: String,
+        required: true,
+    },
+    match_img_string: {
+        type: String,
+        required: true,
+    },
+    match_user_id: {
+        type: String,
+        required: true,
+    },
+    match_item_id: {
+        type: String,
+        required: true,
+    },
 });
 const addressSchema = new mongoose_1.default.Schema({
     street: {
         type: String,
-        required: true
+        required: true,
     },
     city: {
         type: String,
-        required: true
+        required: true,
     },
     post_code: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 const userSchema = new mongoose_1.default.Schema({
     name: {
         required: true,
-        type: String
+        type: String,
     },
     username: {
         required: true,
-        type: String
+        type: String,
     },
     items: [itemSchema],
-    address: [addressSchema]
+    address: [addressSchema],
+    matches: {
+        required: true,
+        type: [matchSchema],
+    },
 });
 exports.default = mongoose_1.default.model(`Data`, userSchema);
