@@ -118,8 +118,7 @@ router.get("/items/:id", async (req, res) => {
       { $replaceRoot: { newRoot: "$items" } },
       { $match: { _id: id } },
     ]);
-    console.log(data);
-    // res.json(data[0]);
+    res.json(data[0]);
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
@@ -143,10 +142,11 @@ router.get("/tradesuccess/", async (req, res) => {});
 router.post("/settrade", async (req, res) => {
   const match_id = new mongoose.Types.ObjectId(`${req.body.match_id}`);
   const val = req.body.bool;
-  console.log(match_id);
+  const options = { new: true };
   const changeBool = await model.findOneAndUpdate(
     { "matches._id": match_id },
-    { $set: { settrade: false } }
+    { $set: { "matches.$.settrade": val } },
+    options
   );
   res.send(changeBool);
 });

@@ -127,7 +127,7 @@ router.get("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
             { $match: { _id: id } },
         ]);
         console.log(data);
-        // res.json(data[0]);
+        res.json(data[0]);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -152,8 +152,8 @@ router.get("/tradesuccess/", (req, res) => __awaiter(void 0, void 0, void 0, fun
 router.post("/settrade", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const match_id = new mongoose_1.default.Types.ObjectId(`${req.body.match_id}`);
     const val = req.body.bool;
-    console.log(match_id);
-    const changeBool = yield model_1.default.findOneAndUpdate({ "matches._id": match_id }, { $set: { settrade: false } });
+    const options = { new: true };
+    const changeBool = yield model_1.default.findOneAndUpdate({ "matches._id": match_id }, { $set: { "matches.$.settrade": val } }, options);
     res.send(changeBool);
 }));
 //PATCH user items by adding a like
