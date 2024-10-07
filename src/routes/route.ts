@@ -63,7 +63,53 @@ router.get("/user/:username", async (req, res) => {
     res.status(500).json({ message: (error as Error).message });
   }
 });
-//GET items by ID
+//Brings back an array of liked items for a user
+router.get("/likes/:user_id", async (req, res) => {
+  const id = req.params.user_id;
+  try {
+    const data = await model.find({ "items.likes": id }, { items: 1, _id: 0 });
+    const filt = data[0].items.filter((item) => {
+      if (item.likes.includes(id)) {
+        return item;
+      }
+    });
+    res.json(filt);
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message });
+  }
+});
+//GET a users Items from the database
+router.get("/:username/items", async (req, res) => {
+  const username = req.params.username;
+  try {
+    const data = await model.findOne(
+      { username: username },
+      { items: 1, _id: 0 }
+    );
+    res.json(data!.items);
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message });
+  }
+});
+//POST add a new items to your items
+router.post("/items/:username", async (req, res) => {
+  const username = req.params.username;
+  const newItem = {
+    item_name: req.body.item_name,
+    description: req.body.description,
+    img_string: req.body.img_string,
+    likes: [],
+  };
+  const options = { new: true };
+  const data = await model.findOneAndUpdate(
+    { username: username },
+    { $addToSet: { items: newItem } },
+    options
+  );
+  res.status(201).send(data);
+});
+
+//GET items by item_ID
 router.get("/items/:id", async (req, res) => {
   const id = new mongoose.Types.ObjectId(req.params.id);
   try {
@@ -72,15 +118,18 @@ router.get("/items/:id", async (req, res) => {
       { $replaceRoot: { newRoot: "$items" } },
       { $match: { _id: id } },
     ]);
-    res.json(data[0]);
+    console.log(data);
+    // res.json(data[0]);
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }
 });
 //GET all items
 router.get("/items", async (req, res) => {
+  const username = req.query.username;
   try {
     const data = await model.aggregate([
+      { $match: { username: { $ne: username } } },
       { $unwind: "$items" },
       { $replaceRoot: { newRoot: "$items" } },
     ]);
