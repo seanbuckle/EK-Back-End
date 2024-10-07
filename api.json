@@ -114,6 +114,49 @@
           }
         ]
       }
+    },
+    "GET /api/likes/:user_id": {
+      "description": "brings back an array of likes for a user",
+      "exampleResponse": [
+        {
+          "item_name": "chair",
+          "description": "To sit on",
+          "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+          "likes": ["dfsfsfsgfdgdgd"],
+          "_id": "66ffc4806fb6d65dd74fb566"
+        }
+      ]
+    },
+    "POST /api/items/:user_name": {
+      "description": "post a brand new item",
+      "exampleBody": {
+        "item_name": "chair",
+        "description": "To sit on",
+        "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000"
+      },
+      "exampleResponse": {
+        "updatedUserDoc": [
+          {
+            "item_name": "chair",
+            "description": "To sit on",
+            "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+            "likes": [],
+            "_id": "66ffc4806fb6d65dd74fb566"
+          }
+        ]
+      }
+    },
+    "GET /api/:user_name/items": {
+      "description": "brings back an array of items that the user owns",
+      "exampleResponse": [
+        {
+          "item_name": "chair",
+          "description": "To sit on",
+          "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+          "likes": [],
+          "_id": "66ffc4806fb6d65dd74fb566"
+        }
+      ]
     }
   }
 ]
