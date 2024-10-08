@@ -19,12 +19,12 @@ const api_json_1 = __importDefault(require("../../api.json"));
 const router = express_1.default.Router();
 // GET all users
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send(api_json_1.default);
+    res.status(200).json(api_json_1.default);
 }));
 router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.find();
-        res.json(data);
+        res.status(200).json(data);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -34,7 +34,7 @@ router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
 router.post("/manyusers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const insert = yield model_1.default.insertMany(req.body);
-        res.send(insert);
+        res.status(201).json(insert);
     }
     catch (error) {
         res.status(400).json({ message: error.message });
@@ -51,7 +51,7 @@ router.post("/new-user", (req, res) => {
     });
     try {
         const dataToSave = data.save();
-        res.status(200).json(dataToSave);
+        res.status(201).json(dataToSave);
     }
     catch (error) {
         res.status(400).json({ message: error.message });
@@ -61,7 +61,7 @@ router.post("/new-user", (req, res) => {
 router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.findById(req.params.id);
-        res.json(data);
+        res.status(200).json(data);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -71,7 +71,7 @@ router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
 router.get("/user/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.findOne({ username: req.params.username });
-        res.json(data);
+        res.status(200).json(data);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -87,7 +87,7 @@ router.get("/likes/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, fu
                 return item;
             }
         });
-        res.json(filt);
+        res.status(200).json(filt);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -98,7 +98,7 @@ router.get("/:username/items", (req, res) => __awaiter(void 0, void 0, void 0, f
     const username = req.params.username;
     try {
         const data = yield model_1.default.findOne({ username: username }, { items: 1, _id: 0 });
-        res.json(data.items);
+        res.status(200).json(data.items);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
@@ -115,7 +115,7 @@ router.post("/items/:username", (req, res) => __awaiter(void 0, void 0, void 0, 
     };
     const options = { new: true };
     const data = yield model_1.default.findOneAndUpdate({ username: username }, { $addToSet: { items: newItem } }, options);
-    res.status(201).send(data);
+    res.status(201).json(data);
 }));
 //GET items by item_ID
 router.get("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -126,7 +126,6 @@ router.get("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
             { $replaceRoot: { newRoot: "$items" } },
             { $match: { _id: id } },
         ]);
-        console.log(data);
         res.json(data[0]);
     }
     catch (error) {
@@ -142,19 +141,24 @@ router.get("/items", (req, res) => __awaiter(void 0, void 0, void 0, function* (
             { $unwind: "$items" },
             { $replaceRoot: { newRoot: "$items" } },
         ]);
-        res.json(data);
+        res.status(200).json(data);
     }
     catch (error) {
         res.status(500).json({ message: error.message });
     }
 }));
-router.get("/tradesuccess/", (req, res) => __awaiter(void 0, void 0, void 0, function* () { }));
-router.post("/settrade", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/tradesuccess/:their_user_id/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = new mongoose_1.default.Types.ObjectId(req.params.their_user_id);
+    const getAddress = yield model_1.default.findOne({ _id: id }, { address: 1 });
+    res.status(200).json(getAddress.address[0]);
+}));
+//POST set a trade accept boolean in each of the userts matches
+router.patch("/settrade", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const match_id = new mongoose_1.default.Types.ObjectId(`${req.body.match_id}`);
     const val = req.body.bool;
     const options = { new: true };
     const changeBool = yield model_1.default.findOneAndUpdate({ "matches._id": match_id }, { $set: { "matches.$.settrade": val } }, options);
-    res.send(changeBool);
+    res.status(200).json(changeBool);
 }));
 //PATCH user items by adding a like
 router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -164,24 +168,26 @@ router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
         const data = updatedData.likes;
         const options = { new: true };
         const result = yield model_1.default.findOneAndUpdate({ "items._id": id }, { $addToSet: { "items.$.likes": data } }, options);
-        res.send(result);
+        res.status(200).send(result);
     }
     catch (error) {
         res.status(400).json({ message: error.message });
     }
 }));
 //gets available trades
-router.get("/trades/:user_id/:their_user_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user_id = req.params.user_id;
-    const their_id = req.params.their_user_id;
-    const getTheirItem = yield model_1.default.findOne({
-        "matches.match_user_id": user_id,
-    }, { matches: 1, username: 1 });
-    const getOurItem = yield model_1.default.findOne({ "matches.match_user_id": their_id }, { matches: 1, username: 1 });
-    if (getOurItem && getTheirItem) {
-        res.send({
-            user_matches: getOurItem.matches,
-            their_matches: getTheirItem.matches,
+router.get("/trades/:matching_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const matching_id = req.params.matching_id;
+    const getMatches = yield model_1.default.aggregate([
+        { $unwind: "$matches" },
+        { $replaceRoot: { newRoot: "$matches" } },
+        { $match: { matching_id: matching_id } },
+    ]);
+    if (getMatches) {
+        res
+            .status(200)
+            .json({
+            [getMatches[1].match_user_name]: getMatches[0],
+            [getMatches[0].match_user_name]: getMatches[1],
         });
     }
 }));
@@ -225,12 +231,14 @@ router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, funct
             { $match: { _id: item_id } },
         ]);
         const their_id = getTheirId._id.toString();
+        const currentMilliseconds = new Date().getTime();
         const theirObj = {
             match_user_id: their_id,
             match_user_name: getTheirId === null || getTheirId === void 0 ? void 0 : getTheirId.username,
             match_item_name: getTheirItem[0].item_name,
             match_img_string: getTheirItem[0].img_string,
             match_item_id: item_id,
+            matching_id: currentMilliseconds,
         };
         const user_match_check = yield model_1.default.findOne({
             $and: [{ _id: user_id }, { "items.likes": their_id }],
@@ -253,12 +261,13 @@ router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, funct
                 match_item_name: (_b = userItem[0]) === null || _b === void 0 ? void 0 : _b.item_name,
                 match_img_string: (_c = userItem[0]) === null || _c === void 0 ? void 0 : _c.img_string,
                 match_item_id: userItemId,
+                matching_id: currentMilliseconds,
             };
             const updateTheirMatches = yield model_1.default.findOneAndUpdate({ _id: their_id }, { $addToSet: { matches: ourObj } }, options);
-            res.send([updateMatches, updateTheirMatches]);
+            res.status(201).send([updateMatches, updateTheirMatches]);
         }
         else {
-            res.send({ msg: "failure" });
+            res.status(304).send({ msg: "not modified" });
         }
     }
     catch (error) {

@@ -45,6 +45,10 @@ const matchSchema = new mongoose_1.default.Schema({
     settrade: {
         type: Boolean,
     },
+    matching_id: {
+        type: String,
+        required: true,
+    },
 });
 const addressSchema = new mongoose_1.default.Schema({
     street: {
