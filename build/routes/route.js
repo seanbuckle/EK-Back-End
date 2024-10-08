@@ -18,67 +18,80 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const api_json_1 = __importDefault(require("../../api.json"));
 const router = express_1.default.Router();
 // GET all users
-router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json(api_json_1.default);
 }));
-router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/users", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield model_1.default.find();
         res.status(200).json(data);
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 }));
 // POST many new users at once
-router.post("/manyusers", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/manyusers", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const insert = yield model_1.default.insertMany(req.body);
         res.status(201).json(insert);
     }
     catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 }));
 //post a new user
-router.post("/new-user", (req, res) => {
-    const data = new model_1.default({
-        name: req.body.name,
-        username: req.body.username,
-        items: req.body.items,
-        address: req.body.address,
-        matches: req.body.matches,
-    });
+router.post("/new-user", (req, res, next) => {
     try {
-        const dataToSave = data.save();
-        res.status(201).json(dataToSave);
+        const data = new model_1.default({
+            name: req.body.name,
+            username: req.body.username,
+            items: req.body.items,
+            address: req.body.address,
+            matches: req.body.matches,
+        });
+        const dataToSave = data
+            .save()
+            .then((data) => {
+            res.status(201).json(dataToSave);
+        })
+            .catch((error) => {
+            next(error);
+        });
     }
     catch (error) {
-        res.status(400).json({ message: error.message });
+        next(error);
     }
 });
 //GET by user by ID
-router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/users/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield model_1.default.findById(req.params.id);
+        const id = new mongoose_1.default.Types.ObjectId(`${req.params.id}`);
+        const data = yield model_1.default.findById(id);
         res.status(200).json(data);
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 }));
 //get user by username
-router.get("/user/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/user/:username", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield model_1.default.findOne({ username: req.params.username });
+        const data = yield model_1.default
+            .findOne({ username: req.params.username })
+            .then((data) => {
+            if (data === null) {
+                return Promise.reject({ status: 400, message: "invalid username" });
+            }
+        });
         res.status(200).json(data);
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 }));
 //Brings back an array of liked items for a user
-router.get("/likes/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/likes/:user_id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.user_id;
     try {
         const data = yield model_1.default.find({ "items.likes": id }, { items: 1, _id: 0 });
@@ -94,7 +107,7 @@ router.get("/likes/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
 }));
 //GET a users Items from the database
-router.get("/:username/items", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/:username/items", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const username = req.params.username;
     try {
         const data = yield model_1.default.findOne({ username: username }, { items: 1, _id: 0 });
@@ -105,7 +118,7 @@ router.get("/:username/items", (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 }));
 //POST add a new items to your items
-router.post("/items/:username", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/items/:username", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const username = req.params.username;
     const newItem = {
         item_name: req.body.item_name,
@@ -118,22 +131,25 @@ router.post("/items/:username", (req, res) => __awaiter(void 0, void 0, void 0, 
     res.status(201).json(data);
 }));
 //GET items by item_ID
-router.get("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = new mongoose_1.default.Types.ObjectId(req.params.id);
+router.get("/items/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const data = yield model_1.default.aggregate([
+        const id = new mongoose_1.default.Types.ObjectId(req.params.id);
+        const data = yield model_1.default
+            .aggregate([
             { $unwind: "$items" },
             { $replaceRoot: { newRoot: "$items" } },
             { $match: { _id: id } },
-        ]);
-        res.json(data[0]);
+        ])
+            .then((data) => {
+            res.json(data[0]);
+        });
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 }));
 //GET all items
-router.get("/items", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/items", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const username = req.query.username;
     try {
         const data = yield model_1.default.aggregate([
@@ -147,21 +163,44 @@ router.get("/items", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ message: error.message });
     }
 }));
-router.get("/tradesuccess/:their_user_id/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = new mongoose_1.default.Types.ObjectId(req.params.their_user_id);
-    const getAddress = yield model_1.default.findOne({ _id: id }, { address: 1 });
-    res.status(200).json(getAddress.address[0]);
+router.get("/tradesuccess/:matching_id/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const matching_id = req.params.matching_id;
+    try {
+        const getMatches = yield model_1.default.aggregate([
+            { $unwind: "$matches" },
+            { $replaceRoot: { newRoot: "$matches" } },
+            { $match: { matching_id: matching_id } },
+        ]);
+        const firstMatch = getMatches[0];
+        const secondMatch = getMatches[1];
+        if (firstMatch.settrade && secondMatch.settrade) {
+            const id = new mongoose_1.default.Types.ObjectId(getMatches[0].match_user_id);
+            const getAddress = yield model_1.default.findOne({ _id: id }, { address: 1 });
+            res.status(200).json(getAddress);
+        }
+        else {
+            res.status(400).send({ msg: "no" });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
 }));
 //POST set a trade accept boolean in each of the userts matches
-router.patch("/settrade", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const match_id = new mongoose_1.default.Types.ObjectId(`${req.body.match_id}`);
-    const val = req.body.bool;
-    const options = { new: true };
-    const changeBool = yield model_1.default.findOneAndUpdate({ "matches._id": match_id }, { $set: { "matches.$.settrade": val } }, options);
-    res.status(200).json(changeBool);
+router.patch("/settrade", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const match_id = new mongoose_1.default.Types.ObjectId(`${req.body.match_id}`);
+        const val = req.body.bool;
+        const options = { new: true };
+        const changeBool = yield model_1.default.findOneAndUpdate({ "matches._id": match_id }, { $set: { "matches.$.settrade": val } }, options);
+        res.status(200).json(changeBool);
+    }
+    catch (error) {
+        next(error);
+    }
 }));
 //PATCH user items by adding a like
-router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.patch("/items/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = new mongoose_1.default.Types.ObjectId(req.params.id);
         const updatedData = req.body;
@@ -175,7 +214,7 @@ router.patch("/items/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 }));
 //gets available trades
-router.get("/trades/:matching_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/trades/:matching_id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const matching_id = req.params.matching_id;
     const getMatches = yield model_1.default.aggregate([
         { $unwind: "$matches" },
@@ -183,16 +222,11 @@ router.get("/trades/:matching_id", (req, res) => __awaiter(void 0, void 0, void 
         { $match: { matching_id: matching_id } },
     ]);
     if (getMatches) {
-        res
-            .status(200)
-            .json({
-            [getMatches[1].match_user_name]: getMatches[0],
-            [getMatches[0].match_user_name]: getMatches[1],
-        });
+        res.status(200).json(getMatches);
     }
 }));
 //DELETE user by ID
-router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete("/delete/:id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
         const data = yield model_1.default.findByIdAndDelete(id);
@@ -208,7 +242,7 @@ router.delete("/delete/:id", (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 }));
 //gets an array of user matches
-router.get("/matches/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/matches/:user_id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const id = new mongoose_1.default.Types.ObjectId(`${req.params.user_id}`);
     try {
         const data = yield model_1.default.find({ _id: id }, { matches: 1 });
@@ -219,7 +253,7 @@ router.get("/matches/:user_id", (req, res) => __awaiter(void 0, void 0, void 0, 
     }
 }));
 //checks whether a match has occured
-router.post("/matchcheck", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/matchcheck", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
     const user_id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
     const item_id = new mongoose_1.default.Types.ObjectId(`${req.body.item_id}`);
