@@ -292,12 +292,12 @@ router.delete(
 router.get(
   "/matches/:user_id",
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = new mongoose.Types.ObjectId(`${req.params.user_id}`);
     try {
+      const id = new mongoose.Types.ObjectId(`${req.params.user_id}`);
       const data = await model.find({ _id: id }, { matches: 1 });
       res.json(data[0].matches);
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      next(error);
     }
   }
 );
