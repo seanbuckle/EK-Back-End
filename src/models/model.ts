@@ -64,6 +64,9 @@ const addressSchema = new mongoose.Schema({
 });
 
 const userSchema = new mongoose.Schema({
+  _id: {
+    type: Schema.ObjectId,
+  },
   name: {
     required: true,
     type: String,

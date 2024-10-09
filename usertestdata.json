@@ -1,0 +1,137 @@
+[
+  {
+    "_id": "60c72b2f9b1e8a4f10b7b1f1",
+    "name": "Peety",
+    "username": "peteisking",
+    "items": [
+      {
+        "item_name": "chair",
+        "description": "To sit on",
+        "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
+        "likes": []
+      },
+      {
+        "item_name": "sofa",
+        "description": "Another thing to sit on",
+        "img_string": "https://www.chesterfieldsofas.co.uk/media/magearray/news/image/cache/900/SOFA_MANCHESTER.jpg",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "15 Downing Street",
+        "city": "Liverpool",
+        "post_code": "SW1A 2AA"
+      }
+    ],
+    "matches": []
+  },
+  {
+    "_id": "60c72b2f9b1e8a4f10b7b1f2",
+    "name": "Alice",
+    "username": "alice_wonder",
+    "items": [
+      {
+        "item_name": "table",
+        "description": "For dining or working",
+        "img_string": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd02xUg_2qkUSHvHQD5N-aqIjm1B-pYi4u2g&s",
+        "likes": []
+      },
+      {
+        "item_name": "lamp",
+        "description": "To light up the room",
+        "img_string": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRX0KjcO28vejZB4QUdBk35k0jh6DPO73W4pHKB-_1go8dcaiky-_qeaUpdOlrrXkgzmL7rh7bcHwxUl2grjXVMYRou82-eTKFP-tn_fkyoYV3feqNqbzyhDd1zcu9FicHNqbiyog&usqp=CAc",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "10 Maple Avenue",
+        "city": "London",
+        "post_code": "EC1A 1AA"
+      }
+    ],
+    "matches": []
+  },
+  {
+    "_id": "60c72b2f9b1e8a4f10b7b1f3",
+    "name": "Bob",
+    "username": "bobby_bear",
+    "items": [
+      {
+        "item_name": "bookshelf",
+        "description": "To store your books",
+        "img_string": "https://images.photowall.com/products/84850/vintage-bookshelf.jpg?h=699&q=85",
+        "likes": []
+      },
+      {
+        "item_name": "desk",
+        "description": "For your work needs",
+        "img_string": "https://m.media-amazon.com/images/I/61L+hugkgjL._AA360_AC_.jpg",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "20 Oak Street",
+        "city": "Manchester",
+        "post_code": "M1 1AA"
+      }
+    ],
+    "matches": []
+  },
+  {
+    "_id": "60c72b2f9b1e8a4f10b7b1f4",
+    "name": "Charlie",
+    "username": "charlie_the_cat",
+    "items": [
+      {
+        "item_name": "bed",
+        "description": "Where you sleep",
+        "img_string": "https://www.naturalbedcompany.co.uk/wp-content/uploads/WALNUT-LEITH-MODERN-BED-WITH-CHARCOAL-LINEN-BEDDING.jpg",
+        "likes": []
+      },
+      {
+        "item_name": "rug",
+        "description": "To add warmth to the floor",
+        "img_string": "https://assets.wfcdn.com/im/10549425/resize-h445%5Ecompr-r85/4104/41045256/Pine+Grove+Oriental+Machine+Woven+Red+Area+Rug.jpg",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "30 Pine Lane",
+        "city": "Birmingham",
+        "post_code": "B1 1AA"
+      }
+    ],
+    "matches": []
+  },
+  {
+    "_id": "60c72b2f9b1e8a4f10b7b1f5",
+    "name": "Daisy",
+    "username": "daisy_flower",
+    "items": [
+      {
+        "item_name": "plant",
+        "description": "To brighten up your space",
+        "img_string": "https://www.bpmcdn.com/f/files/kimberley/import/2021-07/25765559_web1_210708-CVA-gardening-morris-flowers_4.jpg;w=1200;h=800;mode=crop",
+        "likes": []
+      },
+      {
+        "item_name": "mirror",
+        "description": "To check your appearance",
+        "img_string": "https://cdn11.bigcommerce.com/s-q0fta4reqw/images/stencil/500x659/products/997/3593/Sherwood_Wenge_Portarit_120x80__11374.1709649669.jpg?c=2",
+        "likes": []
+      }
+    ],
+    "address": [
+      {
+        "street": "25 Cherry Boulevard",
+        "city": "Glasgow",
+        "post_code": "G1 1AA"
+      }
+    ],
+    "matches": []
+  }
+]

@@ -16,7 +16,7 @@ const supertest_1 = __importDefault(require("supertest"));
 const index_1 = require("../index");
 const seed_1 = __importDefault(require("../seed"));
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    (0, seed_1.default)();
+    yield (0, seed_1.default)();
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield index_1.database.close();

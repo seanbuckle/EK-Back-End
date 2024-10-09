@@ -13,13 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = seed;
-const user_json_1 = __importDefault(require("../user.json"));
+const usertestdata_json_1 = __importDefault(require("../usertestdata.json"));
 const model_1 = __importDefault(require("./models/model"));
 function seed() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield model_1.default.deleteMany();
-            yield model_1.default.insertMany(user_json_1.default);
+            yield model_1.default.insertMany(usertestdata_json_1.default);
             console.log("dataInserted");
         }
         catch (error) {

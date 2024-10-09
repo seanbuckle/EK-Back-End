@@ -253,12 +253,12 @@ router.patch(
 );
 //gets available trades
 router.get(
-  "/trades/:matching_id",
+  "/trades/:matching_id/:username",
 
   async (req: Request, res: Response, next: NextFunction) => {
     if (req.params.matching_id) {
       const matching_id = req.params.matching_id;
-
+      const username = req.params.username;
       const getMatches = await model.aggregate([
         { $unwind: "$matches" },
         { $replaceRoot: { newRoot: "$matches" } },
@@ -266,7 +266,12 @@ router.get(
       ]);
 
       if (getMatches) {
-        res.status(200).json(getMatches);
+        if (getMatches[0].match_user_name === username) {
+          const list = [getMatches[1], getMatches[0]];
+          res.status(200).json(list);
+        } else {
+          res.status(200).json(getMatches);
+        }
       }
     }
   }
@@ -322,7 +327,7 @@ router.post(
         { $replaceRoot: { newRoot: "$items" } },
         { $match: { _id: item_id } },
       ]);
-      const their_id = getTheirId!._id.toString();
+      const their_id = getTheirId!._id!.toString();
       const currentMilliseconds = new Date().getTime();
       const theirObj = {
         match_user_id: their_id,

@@ -1,4 +1,4 @@
-import data from "../user.json";
+import data from "../usertestdata.json";
 import model from "./models/model";
 
 export default async function seed() {

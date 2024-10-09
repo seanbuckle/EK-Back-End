@@ -211,16 +211,23 @@ router.patch("/items/:id", (req, res, next) => __awaiter(void 0, void 0, void 0,
     }
 }));
 //gets available trades
-router.get("/trades/:matching_id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/trades/:matching_id/:username", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.params.matching_id) {
         const matching_id = req.params.matching_id;
+        const username = req.params.username;
         const getMatches = yield model_1.default.aggregate([
             { $unwind: "$matches" },
             { $replaceRoot: { newRoot: "$matches" } },
             { $match: { matching_id: matching_id } },
         ]);
         if (getMatches) {
-            res.status(200).json(getMatches);
+            if (getMatches[0].match_user_name === username) {
+                const list = [getMatches[1], getMatches[0]];
+                res.status(200).json(list);
+            }
+            else {
+                res.status(200).json(getMatches);
+            }
         }
     }
 }));

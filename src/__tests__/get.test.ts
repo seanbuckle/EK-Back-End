@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import seed from "../seed";
 
 beforeAll(async () => {
-  seed();
+  await seed();
 });
 
 afterAll(async () => {
