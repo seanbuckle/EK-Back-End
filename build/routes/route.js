@@ -83,8 +83,8 @@ router.get("/user/:username", (req, res, next) => __awaiter(void 0, void 0, void
             if (data === null) {
                 return Promise.reject({ status: 400, message: "invalid username" });
             }
+            res.status(200).json(data);
         });
-        res.status(200).json(data);
     }
     catch (error) {
         next(error);
