@@ -255,6 +255,9 @@ router.get("/matches/:user_id", (req, res, next) => __awaiter(void 0, void 0, vo
             next(error);
         }
     }
+    else {
+        res.json([]);
+    }
 }));
 //checks whether a match has occured
 router.post("/matchcheck", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

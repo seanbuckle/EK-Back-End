@@ -303,6 +303,8 @@ router.get(
       } catch (error) {
         next(error);
       }
+    } else {
+      res.json([]);
     }
   }
 );
