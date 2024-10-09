@@ -215,14 +215,16 @@ router.patch("/items/:id", (req, res, next) => __awaiter(void 0, void 0, void 0,
 }));
 //gets available trades
 router.get("/trades/:matching_id", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const matching_id = req.params.matching_id;
-    const getMatches = yield model_1.default.aggregate([
-        { $unwind: "$matches" },
-        { $replaceRoot: { newRoot: "$matches" } },
-        { $match: { matching_id: matching_id } },
-    ]);
-    if (getMatches) {
-        res.status(200).json(getMatches);
+    if (req.params.matching_id) {
+        const matching_id = req.params.matching_id;
+        const getMatches = yield model_1.default.aggregate([
+            { $unwind: "$matches" },
+            { $replaceRoot: { newRoot: "$matches" } },
+            { $match: { matching_id: matching_id } },
+        ]);
+        if (getMatches) {
+            res.status(200).json(getMatches);
+        }
     }
 }));
 //DELETE user by ID
@@ -255,9 +257,9 @@ router.get("/matches/:user_id", (req, res, next) => __awaiter(void 0, void 0, vo
 //checks whether a match has occured
 router.post("/matchcheck", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
-    const user_id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
-    const item_id = new mongoose_1.default.Types.ObjectId(`${req.body.item_id}`);
     try {
+        const user_id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
+        const item_id = new mongoose_1.default.Types.ObjectId(`${req.body.item_id}`);
         const getTheirId = yield model_1.default.findOne({ "items._id": item_id }, { _id: 1, username: 1 });
         const getTheirItem = yield model_1.default.aggregate([
             { $unwind: "$items" },
@@ -305,7 +307,7 @@ router.post("/matchcheck", (req, res, next) => __awaiter(void 0, void 0, void 0,
         }
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 }));
 exports.default = router;

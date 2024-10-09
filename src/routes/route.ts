@@ -256,17 +256,20 @@ router.patch(
 //gets available trades
 router.get(
   "/trades/:matching_id",
+
   async (req: Request, res: Response, next: NextFunction) => {
-    const matching_id = req.params.matching_id;
+    if (req.params.matching_id) {
+      const matching_id = req.params.matching_id;
 
-    const getMatches = await model.aggregate([
-      { $unwind: "$matches" },
-      { $replaceRoot: { newRoot: "$matches" } },
-      { $match: { matching_id: matching_id } },
-    ]);
+      const getMatches = await model.aggregate([
+        { $unwind: "$matches" },
+        { $replaceRoot: { newRoot: "$matches" } },
+        { $match: { matching_id: matching_id } },
+      ]);
 
-    if (getMatches) {
-      res.status(200).json(getMatches);
+      if (getMatches) {
+        res.status(200).json(getMatches);
+      }
     }
   }
 );
@@ -305,9 +308,9 @@ router.get(
 router.post(
   "/matchcheck",
   async (req: Request, res: Response, next: NextFunction) => {
-    const user_id = new mongoose.Types.ObjectId(`${req.body.user_id}`);
-    const item_id = new mongoose.Types.ObjectId(`${req.body.item_id}`);
     try {
+      const user_id = new mongoose.Types.ObjectId(`${req.body.user_id}`);
+      const item_id = new mongoose.Types.ObjectId(`${req.body.item_id}`);
       const getTheirId = await model.findOne(
         { "items._id": item_id },
         { _id: 1, username: 1 }
@@ -365,7 +368,7 @@ router.post(
         res.status(304).send({ msg: "not modified" });
       }
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      next(error);
     }
   }
 );
