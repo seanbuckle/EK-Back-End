@@ -103,7 +103,8 @@ router.get("/likes/:user_id", (req, res, next) => __awaiter(void 0, void 0, void
         res.status(200).json(filt);
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        console.log(error);
+        next(error);
     }
 }));
 //GET a users Items from the database
@@ -114,7 +115,7 @@ router.get("/:username/items", (req, res, next) => __awaiter(void 0, void 0, voi
         res.status(200).json(data.items);
     }
     catch (error) {
-        res.status(500).json({ message: error.message });
+        next(error);
     }
 }));
 //POST add a new items to your items
@@ -174,9 +175,11 @@ router.get("/tradesuccess/:matching_id/", (req, res, next) => __awaiter(void 0, 
         const firstMatch = getMatches[0];
         const secondMatch = getMatches[1];
         if (firstMatch.settrade && secondMatch.settrade) {
-            const id = new mongoose_1.default.Types.ObjectId(getMatches[0].match_user_id);
-            const getAddress = yield model_1.default.findOne({ _id: id }, { address: 1 });
-            res.status(200).json(getAddress);
+            const id_one = new mongoose_1.default.Types.ObjectId(getMatches[0].match_user_id);
+            const id_two = new mongoose_1.default.Types.ObjectId(getMatches[1].match_user_id);
+            const getAddress_one = yield model_1.default.findOne({ _id: id_one }, { address: 1, username: 1 });
+            const getAddress_two = yield model_1.default.findOne({ _id: id_two }, { address: 1, username: 1 });
+            res.status(200).json([getAddress_one, getAddress_two]);
         }
     }
     catch (error) {
@@ -265,7 +268,7 @@ router.get("/matches/:user_id", (req, res, next) => __awaiter(void 0, void 0, vo
 }));
 //checks whether a match has occured
 router.post("/matchcheck", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     try {
         const user_id = new mongoose_1.default.Types.ObjectId(`${req.body.user_id}`);
         const item_id = new mongoose_1.default.Types.ObjectId(`${req.body.item_id}`);
@@ -299,12 +302,12 @@ router.post("/matchcheck", (req, res, next) => __awaiter(void 0, void 0, void 0,
                     return item;
                 }
             });
-            const userItemId = (_a = userItem[0]) === null || _a === void 0 ? void 0 : _a._id.toString();
+            const userItemId = (_b = (_a = userItem[0]) === null || _a === void 0 ? void 0 : _a._id) === null || _b === void 0 ? void 0 : _b.toString();
             const ourObj = {
                 match_user_id: user_id,
                 match_user_name: user_match_check.username,
-                match_item_name: (_b = userItem[0]) === null || _b === void 0 ? void 0 : _b.item_name,
-                match_img_string: (_c = userItem[0]) === null || _c === void 0 ? void 0 : _c.img_string,
+                match_item_name: (_c = userItem[0]) === null || _c === void 0 ? void 0 : _c.item_name,
+                match_img_string: (_d = userItem[0]) === null || _d === void 0 ? void 0 : _d.img_string,
                 match_item_id: userItemId,
                 matching_id: currentMilliseconds,
             };

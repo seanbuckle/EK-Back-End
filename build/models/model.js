@@ -25,6 +25,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const itemSchema = new mongoose_1.default.Schema({
+    _id: {
+        type: mongoose_1.Schema.ObjectId,
+    },
     item_name: {
         type: String,
         required: true,
@@ -71,6 +74,9 @@ const matchSchema = new mongoose_1.default.Schema({
     },
 });
 const addressSchema = new mongoose_1.default.Schema({
+    _id: {
+        type: mongoose_1.Schema.ObjectId,
+    },
     street: {
         type: String,
         required: true,

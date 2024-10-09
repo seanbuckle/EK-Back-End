@@ -105,7 +105,8 @@ router.get(
       });
       res.status(200).json(filt);
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      console.log(error);
+      next(error);
     }
   }
 );
@@ -121,7 +122,7 @@ router.get(
       );
       res.status(200).json(data!.items);
     } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
+      next(error);
     }
   }
 );
@@ -198,9 +199,17 @@ router.get(
       const secondMatch = getMatches[1];
 
       if (firstMatch.settrade && secondMatch.settrade) {
-        const id = new mongoose.Types.ObjectId(getMatches[0].match_user_id);
-        const getAddress = await model.findOne({ _id: id }, { address: 1 });
-        res.status(200).json(getAddress);
+        const id_one = new mongoose.Types.ObjectId(getMatches[0].match_user_id);
+        const id_two = new mongoose.Types.ObjectId(getMatches[1].match_user_id);
+        const getAddress_one = await model.findOne(
+          { _id: id_one },
+          { address: 1, username: 1 }
+        );
+        const getAddress_two = await model.findOne(
+          { _id: id_two },
+          { address: 1, username: 1 }
+        );
+        res.status(200).json([getAddress_one, getAddress_two]);
       }
     } catch (error) {
       next(error);
@@ -214,7 +223,7 @@ router.patch(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const match_id = new mongoose.Types.ObjectId(`${req.body.match_id}`);
-      const val = req.body.bool;
+      const val: boolean = req.body.bool;
       const options = { new: true };
       const changeBool = await model.findOneAndUpdate(
         { "matches._id": match_id },
@@ -236,7 +245,7 @@ router.patch(
       const id = new mongoose.Types.ObjectId(req.params.id);
 
       const updatedData = req.body;
-      const data = updatedData.likes;
+      const data: string = updatedData.likes;
       const options = { new: true };
 
       const result = await model.findOneAndUpdate(
@@ -257,8 +266,8 @@ router.get(
 
   async (req: Request, res: Response, next: NextFunction) => {
     if (req.params.matching_id) {
-      const matching_id = req.params.matching_id;
-      const username = req.params.username;
+      const matching_id: string = req.params.matching_id;
+      const username: string = req.params.username;
       const getMatches = await model.aggregate([
         { $unwind: "$matches" },
         { $replaceRoot: { newRoot: "$matches" } },
@@ -356,7 +365,7 @@ router.post(
             return item;
           }
         });
-        const userItemId = userItem[0]?._id.toString();
+        const userItemId = userItem[0]?._id?.toString();
         const ourObj = {
           match_user_id: user_id,
           match_user_name: user_match_check.username,

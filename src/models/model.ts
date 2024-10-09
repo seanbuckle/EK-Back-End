@@ -1,6 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
 const itemSchema = new mongoose.Schema({
+  _id: {
+    type: Schema.ObjectId,
+  },
   item_name: {
     type: String,
     required: true,
@@ -49,6 +52,9 @@ const matchSchema = new mongoose.Schema({
 });
 
 const addressSchema = new mongoose.Schema({
+  _id: {
+    type: Schema.ObjectId,
+  },
   street: {
     type: String,
     required: true,

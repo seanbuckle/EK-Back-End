@@ -5,12 +5,14 @@
     "username": "peteisking",
     "items": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1f6",
         "item_name": "chair",
         "description": "To sit on",
         "img_string": "https://www.internionline.it/cdn/shop/files/358832_DRIADE_01.jpg?v=1726069731&width=2000",
         "likes": []
       },
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1f7",
         "item_name": "sofa",
         "description": "Another thing to sit on",
         "img_string": "https://www.chesterfieldsofas.co.uk/media/magearray/news/image/cache/900/SOFA_MANCHESTER.jpg",
@@ -19,6 +21,7 @@
     ],
     "address": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1f8",
         "street": "15 Downing Street",
         "city": "Liverpool",
         "post_code": "SW1A 2AA"
@@ -32,12 +35,14 @@
     "username": "alice_wonder",
     "items": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1f9",
         "item_name": "table",
         "description": "For dining or working",
         "img_string": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd02xUg_2qkUSHvHQD5N-aqIjm1B-pYi4u2g&s",
-        "likes": []
+        "likes": ["60c72b2f9b1e8a4f10b7b1f1"]
       },
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1fa",
         "item_name": "lamp",
         "description": "To light up the room",
         "img_string": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRX0KjcO28vejZB4QUdBk35k0jh6DPO73W4pHKB-_1go8dcaiky-_qeaUpdOlrrXkgzmL7rh7bcHwxUl2grjXVMYRou82-eTKFP-tn_fkyoYV3feqNqbzyhDd1zcu9FicHNqbiyog&usqp=CAc",
@@ -46,6 +51,7 @@
     ],
     "address": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1fb",
         "street": "10 Maple Avenue",
         "city": "London",
         "post_code": "EC1A 1AA"
@@ -59,12 +65,14 @@
     "username": "bobby_bear",
     "items": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1fc",
         "item_name": "bookshelf",
         "description": "To store your books",
         "img_string": "https://images.photowall.com/products/84850/vintage-bookshelf.jpg?h=699&q=85",
         "likes": []
       },
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1fd",
         "item_name": "desk",
         "description": "For your work needs",
         "img_string": "https://m.media-amazon.com/images/I/61L+hugkgjL._AA360_AC_.jpg",
@@ -73,6 +81,7 @@
     ],
     "address": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1fe",
         "street": "20 Oak Street",
         "city": "Manchester",
         "post_code": "M1 1AA"
@@ -86,12 +95,14 @@
     "username": "charlie_the_cat",
     "items": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b1ff",
         "item_name": "bed",
         "description": "Where you sleep",
         "img_string": "https://www.naturalbedcompany.co.uk/wp-content/uploads/WALNUT-LEITH-MODERN-BED-WITH-CHARCOAL-LINEN-BEDDING.jpg",
         "likes": []
       },
       {
+        "_id": "60c72b2f9b1e8a4f10b7b200",
         "item_name": "rug",
         "description": "To add warmth to the floor",
         "img_string": "https://assets.wfcdn.com/im/10549425/resize-h445%5Ecompr-r85/4104/41045256/Pine+Grove+Oriental+Machine+Woven+Red+Area+Rug.jpg",
@@ -100,6 +111,7 @@
     ],
     "address": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b201",
         "street": "30 Pine Lane",
         "city": "Birmingham",
         "post_code": "B1 1AA"
@@ -113,12 +125,14 @@
     "username": "daisy_flower",
     "items": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b202",
         "item_name": "plant",
         "description": "To brighten up your space",
         "img_string": "https://www.bpmcdn.com/f/files/kimberley/import/2021-07/25765559_web1_210708-CVA-gardening-morris-flowers_4.jpg;w=1200;h=800;mode=crop",
         "likes": []
       },
       {
+        "_id": "60c72b2f9b1e8a4f10b7b203",
         "item_name": "mirror",
         "description": "To check your appearance",
         "img_string": "https://cdn11.bigcommerce.com/s-q0fta4reqw/images/stencil/500x659/products/997/3593/Sherwood_Wenge_Portarit_120x80__11374.1709649669.jpg?c=2",
@@ -127,6 +141,7 @@
     ],
     "address": [
       {
+        "_id": "60c72b2f9b1e8a4f10b7b204",
         "street": "25 Cherry Boulevard",
         "city": "Glasgow",
         "post_code": "G1 1AA"
