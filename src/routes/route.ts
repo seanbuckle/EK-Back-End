@@ -201,8 +201,6 @@ router.get(
         const id = new mongoose.Types.ObjectId(getMatches[0].match_user_id);
         const getAddress = await model.findOne({ _id: id }, { address: 1 });
         res.status(200).json(getAddress);
-      } else {
-        res.status(400).send({ msg: "no" });
       }
     } catch (error) {
       next(error);

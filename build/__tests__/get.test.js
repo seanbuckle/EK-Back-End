@@ -13,10 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
-const index_1 = __importDefault(require("../index"));
+const index_1 = require("../index");
+const seed_1 = __importDefault(require("../seed"));
+beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+    (0, seed_1.default)();
+}));
+afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
+    yield index_1.database.close();
+    index_1.server.close();
+}));
 describe("GET: Test GET endpoint", () => {
-    it("should return all users with nested documents", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.default)
+    it.only("should return api endpoints", () => {
+        return (0, supertest_1.default)(index_1.app).get("/api/users").expect(200);
+    });
+    it("should return all users with nested documents", () => {
+        return (0, supertest_1.default)(index_1.app)
             .get("/api/users")
             .expect(200)
             .then(({ body }) => {
@@ -24,9 +35,9 @@ describe("GET: Test GET endpoint", () => {
             expect(body[0]).toHaveProperty("name");
             expect(body[0]).toHaveProperty("username");
         });
-    }));
+    });
     it("should return all items in mongo database", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.default)
+        yield (0, supertest_1.default)(index_1.app)
             .get("/api/items")
             .expect(200)
             .then(({ body }) => {
@@ -37,8 +48,8 @@ describe("GET: Test GET endpoint", () => {
         });
     }));
     it("should return an individual user by ID", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.default)
-            .get(`/api/users/66fd22b19b790ad6086965fc`)
+        yield (0, supertest_1.default)(index_1.app)
+            .get(`/api/users/66ffc4806fb6d65dd74fb565`)
             .expect(200)
             .then(({ body }) => {
             expect(body).toHaveProperty("name");
@@ -48,7 +59,7 @@ describe("GET: Test GET endpoint", () => {
         });
     }));
     it("should return an individual user by username", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.default)
+        yield (0, supertest_1.default)(index_1.app)
             .get(`/api/user/peteisking`)
             .expect(200)
             .then(({ body }) => {
@@ -59,8 +70,8 @@ describe("GET: Test GET endpoint", () => {
         });
     }));
     it("should return an individual item by ID", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield (0, supertest_1.default)(index_1.default)
-            .get(`/api/items/66fd22ec9b790ad608696602`)
+        yield (0, supertest_1.default)(index_1.app)
+            .get(`/api/items/66ffc4806fb6d65dd74fb566`)
             .expect(200)
             .then(({ body }) => {
             expect(body).toHaveProperty("likes");

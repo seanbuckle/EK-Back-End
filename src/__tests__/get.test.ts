@@ -1,9 +1,23 @@
 import request from "supertest";
-import app from "../index";
+import { app, database, server } from "../index";
+import mongoose from "mongoose";
+import seed from "../seed";
+
+beforeAll(async () => {
+  seed();
+});
+
+afterAll(async () => {
+  await database.close();
+  server.close();
+});
 
 describe("GET: Test GET endpoint", () => {
-  it("should return all users with nested documents", async () => {
-    await request(app)
+  it.only("should return api endpoints", () => {
+    return request(app).get("/api/users").expect(200);
+  });
+  it("should return all users with nested documents", () => {
+    return request(app)
       .get("/api/users")
       .expect(200)
       .then(({ body }) => {
@@ -25,7 +39,7 @@ describe("GET: Test GET endpoint", () => {
   });
   it("should return an individual user by ID", async () => {
     await request(app)
-      .get(`/api/users/66fd22b19b790ad6086965fc`)
+      .get(`/api/users/66ffc4806fb6d65dd74fb565`)
       .expect(200)
       .then(({ body }) => {
         expect(body).toHaveProperty("name");
@@ -47,7 +61,7 @@ describe("GET: Test GET endpoint", () => {
   });
   it("should return an individual item by ID", async () => {
     await request(app)
-      .get(`/api/items/66fd22ec9b790ad608696602`)
+      .get(`/api/items/66ffc4806fb6d65dd74fb566`)
       .expect(200)
       .then(({ body }) => {
         expect(body).toHaveProperty("likes");

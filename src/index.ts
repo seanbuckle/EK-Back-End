@@ -71,8 +71,8 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: (error as Error).message });
 });
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
   console.log(`server started app on 3000`);
 });
 
-export default app;
+export { app, database, server };

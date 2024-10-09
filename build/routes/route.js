@@ -178,9 +178,6 @@ router.get("/tradesuccess/:matching_id/", (req, res, next) => __awaiter(void 0, 
             const getAddress = yield model_1.default.findOne({ _id: id }, { address: 1 });
             res.status(200).json(getAddress);
         }
-        else {
-            res.status(400).send({ msg: "no" });
-        }
     }
     catch (error) {
         next(error);

@@ -3,16 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.server = exports.database = exports.app = void 0;
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 require("dotenv/config");
 const route_1 = __importDefault(require("./routes/route"));
 const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
+exports.app = app;
 app.use((0, cors_1.default)());
 const mongoString = process.env.DATABASE_URL;
 mongoose_1.default.connect(mongoString);
 const database = mongoose_1.default.connection;
+exports.database = database;
 database.on("error", (error) => {
     console.log(error);
 });
@@ -67,7 +70,7 @@ app.use((error, req, res, next) => {
 app.use((error, req, res, next) => {
     res.status(500).json({ message: error.message });
 });
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
     console.log(`server started app on 3000`);
 });
-exports.default = app;
+exports.server = server;
