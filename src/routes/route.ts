@@ -228,6 +228,10 @@ router.get(
 //POST set a trade accept boolean in each of the userts matches
 router.patch(
   "/settrade",
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const match_id = new mongoose.Types.ObjectId(`${req.body.match_id}`);
@@ -246,8 +250,14 @@ router.patch(
 );
 
 //PATCH user items by adding a like
+const itemsRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
 router.patch(
   "/items/:id",
+  itemsRateLimiter,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = new mongoose.Types.ObjectId(req.params.id);
@@ -295,8 +305,15 @@ router.get(
 );
 
 //DELETE user by ID
+const deleteLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+});
+
 router.delete(
   "/delete/:id",
+  deleteLimiter,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
