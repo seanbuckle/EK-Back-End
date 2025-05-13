@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import rateLimit from "express-rate-limit";
 import model from "../models/model";
 import mongoose, { ObjectId } from "mongoose";
 import { match } from "assert";
@@ -321,8 +322,15 @@ router.get(
   }
 );
 //checks whether a match has occured
+const matchCheckLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+});
+
 router.post(
   "/matchcheck",
+  matchCheckLimiter,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user_id = new mongoose.Types.ObjectId(`${req.body.user_id}`);
