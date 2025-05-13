@@ -185,8 +185,15 @@ router.get(
     }
   }
 );
+const tradeSuccessLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+});
+
 router.get(
   "/tradesuccess/:matching_id/",
+  tradeSuccessLimiter,
   async (req: Request, res: Response, next: NextFunction) => {
     const matching_id = req.params.matching_id;
     try {
