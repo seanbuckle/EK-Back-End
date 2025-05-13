@@ -305,8 +305,15 @@ router.delete(
   }
 );
 //gets an array of user matches
+const matchesLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later.",
+});
+
 router.get(
   "/matches/:user_id",
+  matchesLimiter,
   async (req: Request, res: Response, next: NextFunction) => {
     if (req.params.user_id) {
       try {
