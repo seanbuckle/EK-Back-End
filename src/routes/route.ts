@@ -221,6 +221,10 @@ router.get(
 //POST set a trade accept boolean in each of the userts matches
 router.patch(
   "/settrade",
+  rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const match_id = new mongoose.Types.ObjectId(`${req.body.match_id}`);
